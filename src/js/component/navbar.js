@@ -1,17 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { DropDownFav } from "./dropdownfav";
 
 export const Navbar = () => {
+	const styleimg = {
+		maxHeight: "3rem"
+	};
 	return (
-		<nav className="navbar navbar-light bg-light mb-3">
+		<nav className="navbar navbar-dark bg-dark mb-3 px-5">
 			<Link to="/">
-				<span className="navbar-brand mb-0 h1">React Boilerplate</span>
+				<img
+					src="https://static-mh.content.disney.io/starwars/assets/navigation/sw_logo_stacked-336c62367939.png"
+					style={styleimg}
+				/>
 			</Link>
-			<div className="ml-auto">
-				<Link to="/demo">
-					<button className="btn btn-primary">Check the Context in action</button>
-				</Link>
-			</div>
+			<DropDownFav />
 		</nav>
 	);
 };
