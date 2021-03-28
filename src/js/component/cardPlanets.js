@@ -1,6 +1,7 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useState, useContext } from "react";
 import PropType from "prop-types";
 import { Link } from "react-router-dom";
+import { Context } from "../store/appContext";
 
 let initialPlanet = {
 	properties: {
@@ -28,39 +29,29 @@ export const CardPlanets = props => {
 		width: "20rem"
 	};
 
+	const { store, actions } = useContext(Context);
 	const [Planet, setPlanet] = useState(initialPlanet);
-	const [Favorite, setFavorite] = useState(false);
 
-	let URL = "https://www.swapi.tech/api/";
+	const URL = "https://swapi.dev/api/";
 	let detailURL = "planets/details/" + props.PlanetID;
 
 	async function fnPlanet() {
-		//const response = await fetch(URL + "planets/" + props.PlanetID)
-		const response = await fetch(
-			"https://raw.githubusercontent.com/johmstone/files/main/JSONResultPlanetDetail.json"
-		)
+		const response = await fetch(URL + "planets/" + props.PlanetID)
 			.then(res => {
 				if (res.status == 200) {
 					return res.json();
-					//console.log(res.json());
 				}
 			})
+			.then(response => {
+				setPlanet(response.result);
+			})
 			.catch(err => console.error(err));
-
-		setPlanet(response.result);
 	}
 
 	useEffect(() => {
 		fnPlanet();
 	}, []);
 
-	const ChangeFavorite = () => {
-		if (Favorite) {
-			setFavorite(false);
-		} else {
-			setFavorite(true);
-		}
-	};
 	return (
 		<div className="card m-3" style={cardStyle}>
 			<svg
@@ -87,8 +78,18 @@ export const CardPlanets = props => {
 					<Link to={detailURL} className="btn btn-outline-primary text-primary">
 						Learn more!
 					</Link>
-					<a className="btn btn-outline-warning text-warning float-right" onClick={() => ChangeFavorite()}>
-						{Favorite ? <i className="fas fa-heart" /> : <i className="far fa-heart" />}
+					<a
+						className="btn btn-outline-warning text-warning float-right"
+						onClick={() => actions.changeFavoritePlanet(props.PlanetID)}>
+						{store.planets.map((item, i) => {
+							if (item.uid === props.PlanetID) {
+								if (item.favorite) {
+									return <i className="fas fa-heart" key={i} />;
+								} else {
+									return <i className="far fa-heart" key={i} />;
+								}
+							}
+						})}
 					</a>
 				</div>
 			</div>

@@ -1,42 +1,80 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			]
+			people: [],
+			planets: []
 		},
 		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
-			loadSomeData: () => {
-				/**
-					fetch().then().then(data => setStore({ "foo": data.bar }))
-				*/
-			},
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+			loadData: () => {
+				const URL = "https://swapi.dev/api/";
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
+				async function fnPeopleList() {
+					const result = await fetch(URL + "people/")
+						.then(res => {
+							if (res.status == 200) {
+								return res.json();
+							}
+						})
+						.then(response => {
+							const newData = response.results.map(item => ({ ...item, favorite: false }));
+							setStore(err => console.error(err));
+						})
+						.catch(err => console.error(err));
+				}
+
+				async function fnPlanetList() {
+					const result = await fetch(URL + "planets/")
+						.then(res => {
+							if (res.status == 200) {
+								return res.json();
+							}
+						})
+						.then(resp => {
+							const newData = response.results.map(item => ({ ...item, favorite: false }));
+							setStore({ planets: newData });
+						})
+						.catch(err => console.err(err));
+				}
+				fnPeopleList();
+				fnPLanetsList();
+			},
+
+			changeFavoritePeople: PersonID => {
+			
+				const store = getStore();
+				
+				const newData = store.people.map(item => {
+					if (item.uid === PersonID) {
+						if (item.favorite) {
+							item.favorite = false;
+						} else {
+							item.favorite = true;
+						}
+						return item;
+					} else {
+						return item;
+					}
 				});
 
-				//reset the global store
-				setStore({ demo: demo });
+				setStore({ people: newData });
+			},
+			changeFavoritePlanet: PlanetID => {
+				const store = getStore();
+
+				const newData = store.planets.map(item => {
+					if (item.uid === PlanetID) {
+						if (item.favorite) {
+							item.favorite = false;
+						} else {
+							item.favorite = true;
+						}
+						return item;
+					} else {
+						return item;
+					}
+				});
+
+				setStore({ planets: newData });
 			}
 		}
 	};

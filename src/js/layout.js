@@ -1,4 +1,4 @@
-import React from "react";
+aimport React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 
@@ -32,7 +32,7 @@ const Layout = () => {
 							<Single />
 						</Route>
 						<Route>
-							<h1>Not found!</h1>
+							<h1>Galaxy Not found!</h1>
 						</Route>
 					</Switch>
 					<Footer />

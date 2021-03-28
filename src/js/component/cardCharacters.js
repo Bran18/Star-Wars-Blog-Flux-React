@@ -1,6 +1,7 @@
 import React, { Component, useEffect, useState } from "react";
 import PropType from "prop-types";
 import { Link } from "react-router-dom";
+import { Context } from "../store/appContext";
 
 let initialPeople = {
 	properties: {
@@ -14,8 +15,8 @@ let initialPeople = {
 		created: "2021 - 03 - 12T19: 25: 06.429Z",
 		edited: "2021 - 03 - 12T19: 25: 06.429Z",
 		name: "Luke Skywalker",
-		homeworld: "https://www.swapi.tech/api/planets/1",
-		url: "https://www.swapi.tech/api/people/1"
+		homeworld: "https://swapi.dev/api/planets/1",
+		url: "https://swapi.dev/api/people/1"
 	},
 	description: "A person within the Star Wars universe",
 	_id: "5f63a36eee9fd7000499be42",
@@ -27,40 +28,30 @@ export const CardCharacters = props => {
 	const cardStyle = {
 		width: "18rem"
 	};
-
+	const { store, actions } = useContext(Context);
 	const [People, setPeople] = useState(initialPeople);
-	const [Favorite, setFavorite] = useState(false);
 
-	let URL = "https://www.swapi.tech/api/";
+	const URL = "https://swapi.dev/api/";
 	let detailURL = "people/details/" + props.PeopleID;
 
 	async function fnPeople() {
-		//const response = await fetch(URL + "people/" + props.PeopleID)
-		const response = await fetch(
-			"https://raw.githubusercontent.com/johmstone/files/main/JSONResultPeopleDetail.json"
-		)
+		const response = await fetch(URL + "people/" + props.PeopleID)
 			.then(res => {
 				if (res.status == 200) {
 					return res.json();
-					//console.log(res.json());
+					console.log(res.json());
 				}
 			})
+			.then(response => {
+				setPeople(response.result);
+			})
 			.catch(err => console.error(err));
-
-		setPeople(response.result);
 	}
 
 	useEffect(() => {
 		fnPeople();
 	}, []);
 
-	const ChangeFavorite = () => {
-		if (Favorite) {
-			setFavorite(false);
-		} else {
-			setFavorite(true);
-		}
-	};
 	return (
 		<div className="card m-3" style={cardStyle}>
 			<svg
@@ -87,8 +78,18 @@ export const CardCharacters = props => {
 					<Link to={detailURL} className="btn btn-outline-primary text-primary">
 						Learn more!
 					</Link>
-					<a className="btn btn-outline-warning text-warning float-right" onClick={() => ChangeFavorite()}>
-						{Favorite ? <i className="fas fa-heart" /> : <i className="far fa-heart" />}
+					<a
+						className="btn btn-outline-warning text-warning float-right"
+						onClick={() => actions.changeFavoritePeople(props.PeopleID)}>
+						{store.people.map((item, i) => {
+							if (item.uid === props.PeopleID) {
+								if (item.favorite) {
+									return <i className="fas fa-heart" key={i} />;
+								} else {
+									return <i className="far fa-heart" key={i} />;
+								}
+							}
+						})}
 					</a>
 				</div>
 			</div>
@@ -98,5 +99,4 @@ export const CardCharacters = props => {
 
 CardCharacters.propTypes = {
 	PeopleID: PropType.string
-	// 2) add here the new properties into the proptypes object
 };
