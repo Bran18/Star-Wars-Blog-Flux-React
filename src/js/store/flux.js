@@ -40,9 +40,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			changeFavoritePeople: PersonID => {
-			
 				const store = getStore();
-				
+
 				const newData = store.people.map(item => {
 					if (item.uid === PersonID) {
 						if (item.favorite) {
