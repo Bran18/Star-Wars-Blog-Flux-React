@@ -4,13 +4,13 @@ import { DropDownFav } from "./dropdownfav";
 
 export const Navbar = () => {
 	const styleimg = {
-		height: "40px"
+		maxHeight: "3rem"
 	};
 	return (
 		<nav className="navbar navbar-dark bg-dark mb-3 px-5">
 			<Link to="/">
 				<img
-					src="https://logodownload.org/wp-content/uploads/2015/12/star-wars-logo-3-1.png"
+					src="https://static-mh.content.disney.io/starwars/assets/navigation/sw_logo_stacked-336c62367939.png"
 					style={styleimg}
 				/>
 			</Link>

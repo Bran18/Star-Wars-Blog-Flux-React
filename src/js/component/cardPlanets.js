@@ -32,14 +32,16 @@ export const CardPlanets = props => {
 	const { store, actions } = useContext(Context);
 	const [Planet, setPlanet] = useState(initialPlanet);
 
-	const URL = "https://swapi.dev/api/";
+	let URL = "https://www.swapi.tech/api/";
 	let detailURL = "planets/details/" + props.PlanetID;
 
 	async function fnPlanet() {
 		const response = await fetch(URL + "planets/" + props.PlanetID)
+		
 			.then(res => {
 				if (res.status == 200) {
 					return res.json();
+					//console.log(res.json());
 				}
 			})
 			.then(response => {

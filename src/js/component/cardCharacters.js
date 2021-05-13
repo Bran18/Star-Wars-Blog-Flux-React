@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useState, useContext } from "react";
 import PropType from "prop-types";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
@@ -15,8 +15,8 @@ let initialPeople = {
 		created: "2021 - 03 - 12T19: 25: 06.429Z",
 		edited: "2021 - 03 - 12T19: 25: 06.429Z",
 		name: "Luke Skywalker",
-		homeworld: "https://swapi.dev/api/planets/1",
-		url: "https://swapi.dev/api/people/1"
+		homeworld: "https://www.swapi.tech/api/planets/1",
+		url: "https://www.swapi.tech/api/people/1"
 	},
 	description: "A person within the Star Wars universe",
 	_id: "5f63a36eee9fd7000499be42",
@@ -28,14 +28,16 @@ export const CardCharacters = props => {
 	const cardStyle = {
 		width: "18rem"
 	};
+
 	const { store, actions } = useContext(Context);
 	const [People, setPeople] = useState(initialPeople);
 
-	const URL = "https://swapi.dev/api/";
+	let URL = "https://www.swapi.tech/api/";
 	let detailURL = "people/details/" + props.PeopleID;
 
 	async function fnPeople() {
 		const response = await fetch(URL + "people/" + props.PeopleID)
+			
 			.then(res => {
 				if (res.status == 200) {
 					return res.json();
@@ -46,6 +48,7 @@ export const CardCharacters = props => {
 				setPeople(response.result);
 			})
 			.catch(err => console.error(err));
+		//console.log(response);
 	}
 
 	useEffect(() => {
@@ -99,4 +102,5 @@ export const CardCharacters = props => {
 
 CardCharacters.propTypes = {
 	PeopleID: PropType.string
+	// 2) add here the new properties into the proptypes object
 };
